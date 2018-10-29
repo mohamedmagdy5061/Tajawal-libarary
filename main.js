@@ -179,10 +179,10 @@ function deleteBook(id ,indx){
 
 // this method for Delete book =====================================================> 
 function addBookToLibrary(){
-  const inputNameBook = $$('.inputNameBook').value;
-  const inputAutherBook = $$('.inputAutherBook').value;
-  const inputGroupFile01 = $('inputGroupFile01');
-  const successAlert = $$('.successAlert');
+  let inputNameBook = $$('.inputNameBook').value;
+  let inputAutherBook = $$('.inputAutherBook').value;
+  // const inputGroupFile01 = $('inputGroupFile01');
+  let successAlert = $$('.successAlert');
 
   if(inputNameBook.value !== "" && inputAutherBook.value!== "" ){
     let  newBook= {name:inputNameBook , auther:inputAutherBook ,howTakeIt:"Available",img:"coverBook.png"}
@@ -190,6 +190,8 @@ function addBookToLibrary(){
     successAlert.setAttribute("style"," display: block;");
     setTimeout(()=>successAlert.setAttribute("style"," display: None;"),1500)
   }
+  $$('.inputNameBook').value = "";
+  $$('.inputAutherBook').value = "";
 display()
 }
 
