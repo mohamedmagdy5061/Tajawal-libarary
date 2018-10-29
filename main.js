@@ -101,33 +101,42 @@ function selectBookOptions() {
 function display() {
 
   AvailableBooks = [];
+  unAvailableBooks =[];
+
   const tableBody = $$(".tableBody");
 
   firebase.database().ref("availableBooks").on('value', (snap)=>{
-    let avaData = snap.val();
-    for(let prop in avaData ){
-     let key = prop 
-     let data=avaData[prop];
-       data.id = key;
-       AvailableBooks.push(data)
-       // Bookss.push(data)
-       sorting(AvailableBooks)
-     }
-    })
+    let avaData = snap.val()
+   
+      for(let prop in avaData ){
+       let key = prop 
+       let data=avaData[prop];
+         data.id = key;
+         AvailableBooks.push(data)
+         // Bookss.push(data)
+         sorting(AvailableBooks)
+       }
 
-  result = "";
-  AvailableBooks.forEach((element, indx) => {
-      result += `<tr>
-        <td>${indx+1}</td>
-        <td>${element.name}</td>
-        <td><img class="coverBook" src="${element.img}"></td>
-        <td>${element.auther}</td>
-        <td class="available">${element.howTakeIt}</td>
-        <td><button class="deleteBook btn btn-danger" onclick="deleteBook('${element.id}',${indx})"><i class="fas fa-times-circle"></i></button></td>
-        </tr>`;
-  });
+       result = "";
+       AvailableBooks.forEach((element, indx) => {
+           result += `<tr>
+             <td>${indx+1}</td>
+             <td>${element.name}</td>
+             <td><img class="coverBook" src="${element.img}"></td>
+             <td>${element.auther}</td>
+             <td class="available">${element.howTakeIt}</td>
+             <td><button class="deleteBook btn btn-danger" onclick="deleteBook('${element.id}',${indx})"><i class="fas fa-times-circle"></i></button></td>
+             </tr>`;
+       });
+    
+      console.log("done")
+      tableBody.innerHTML = result;
+      })
 
-  unAvailableBooks =[];
+   
+
+
+  
   firebase.database().ref("unavailableBooks").on('value', (snap)=>{
     let UnAvaData = snap.val();
     for(let prop in UnAvaData){
@@ -137,23 +146,23 @@ function display() {
      unAvailableBooks.push(data)
      // console.log(unAvailableBooks)
     }
-   })
+       if (unAvailableBooks != null && unAvailableBooks!= "undefined") {
+         let result2=""
+       
+         unAvailableBooks.forEach((element, indx) => {
+           result2 += `<tr>
+             <td>${indx+1}</td>
+             <td>${element.name}</td>
+             <td>${new Date(element.time).toDateString()}</td>
+             <td class="notAvailable">${element.howTakeIt}</td>
+             <td><button class="backBook btn btn-danger" onclick="returnBook('${element.id}',${indx})"><i class="fas fa-times-circle"></i></button></td>
+             </tr>`;
+         });
 
-  tableBody.innerHTML = result;
-  if (unAvailableBooks != null && unAvailableBooks!= "undefined") {
-    let result2=""
-  
-    unAvailableBooks.forEach((element, indx) => {
-      result2 += `<tr>
-        <td>${indx+1}</td>
-        <td>${element.name}</td>
-        <td>${new Date(element.time).toDateString()}</td>
-        <td class="notAvailable">${element.howTakeIt}</td>
-        <td><button class="backBook btn btn-danger" onclick="returnBook('${element.id}',${indx})"><i class="fas fa-times-circle"></i></button></td>
-        </tr>`;
-    });
-    tableAvailabilityBody.innerHTML = result2;
-  }
+         tableAvailabilityBody.innerHTML = result2;
+        }
+  })
+
 }
 
 // this method for Delete book =====================================================>  finish
@@ -242,7 +251,6 @@ unAvailableBooks.forEach(element=>{
     }
   })
   removeFromUnAvailableBooks(id ,indx)
-
   display()
 }
 
@@ -265,6 +273,7 @@ function alerts(alrtMsgs , time){
   alrtMsg.textContent = alrtMsgs; 
   setTimeout(function(){ alrt.style.opacity = "0"; }, time); 
 }
+
 
 display()
 //this method for general Alert Made By Megooo ===========================================>
